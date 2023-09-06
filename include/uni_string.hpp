@@ -1,19 +1,16 @@
 #pragma once
-#include "common.h"
-#include "encoding.h"
 #include <string>
 #include <vector>
 #include <initializer_list>
 #include <type_traits>
 
+#include "common.h"
+#include "encoding.h"
+#include "endian.h"
+#include "conversion.hpp"
+
 #ifdef UNI_STR_CPP20
 #include <compare>
-#endif
-
-#ifdef UNI_STR_USE_STD_STRLEN
-#define UNI_STR_STRLEN_CONSTEXPR UNI_STR_CPP17_CONSTEXPR
-#else
-#define UNI_STR_STRLEN_CONSTEXPR constexpr
 #endif
 
 
@@ -21,32 +18,20 @@ namespace oct {
 	using byte_vector = std::vector<byte_t>;
 
 
-	using default_ecoding = UTF16<>;
+	using default_uni_str_enc = UTF16<>;
 
 
 	constexpr static size_t npos = -1;
 }
 
 
-namespace oct{
-	template<typename CharTy, typename EnableTy = bool>
-	using enable_if_char = typename std::enable_if<std::is_integral<CharTy>::value, EnableTy>::type;
-
-
-	template<typename InputIt, typename EnableTy = bool>
-	using enable_if_input_iter = typename std::enable_if<
-		std::is_base_of<
-			std::input_iterator_tag, 
-			typename std::iterator_traits<InputIt>::iterator_category
-		>::value, 
-	EnableTy>::type;
-}
 
 namespace oct {
-	template<class RefEncoding = default_ecoding>
+	template<class RefEncoding = default_uni_str_enc>
 	struct uni_string {
 		using char_type = typename RefEncoding::char_type;
 		using storage_type = typename RefEncoding::storage_type;
+		using internal_type = storage_type;
 
 		UNI_STR_CPP20_CONSTEXPR
 		uni_string() = default;
@@ -116,21 +101,13 @@ namespace oct {
 		UNI_STR_CPP20_CONSTEXPR size_t size() const noexcept;
 		UNI_STR_CPP20_CONSTEXPR size_t length() const noexcept;
 
-		UNI_STR_CPP20_CONSTEXPR char_type* data() noexcept;              //marked for removal
-		UNI_STR_CPP20_CONSTEXPR const char_type* data() const noexcept;	 //marked for removal
-		UNI_STR_CPP20_CONSTEXPR const char_type* c_str() const noexcept; //marked for removal
 
-		UNI_STR_CPP20_CONSTEXPR byte_vector bytes() const;
+		template<typename CharTy = internal_type> UNI_STR_CPP20_CONSTEXPR
+		byte_vector bytes() const;
+
 
 
 		UNI_STR_CPP20_CONSTEXPR int compare(const uni_string& str) const noexcept;
-
-
-		UNI_STR_CPP20_CONSTEXPR char_type& operator[](size_t pos);             //marked for removal
-		UNI_STR_CPP20_CONSTEXPR const char_type& operator[](size_t pos) const; //marked for removal
-		
-		UNI_STR_CPP20_CONSTEXPR char_type& at(size_t pos);			   //marked for removal
-		UNI_STR_CPP20_CONSTEXPR const char_type& at(size_t pos) const; //marked for removal
 		
 
 
@@ -161,6 +138,7 @@ namespace oct {
 
 		template<typename CharTy, enable_if_char<CharTy> = true> UNI_STR_CPP20_CONSTEXPR
 		uni_string& prepend(std::initializer_list<CharTy> char_list);
+
 
 
 		template<typename OtherEncoding> UNI_STR_CPP20_CONSTEXPR
@@ -218,8 +196,9 @@ namespace oct {
 
 		template<typename CharTy, class Traits, class RefEnc>
 		friend std::basic_istream<CharTy, Traits>& operator>>(std::basic_istream<CharTy, Traits>& is, uni_string<RefEnc>& str);
+
 	private:
-		std::basic_string<storage_type> data_str;
+		std::basic_string<internal_type> data_str;
 	};
 
 
@@ -318,12 +297,12 @@ namespace oct {
 
 
 	// Type aliases for convenience
-	template<typename RefEnc = default_ecoding> using UniString = uni_string<RefEnc>;
-	template<typename RefEnc = default_ecoding> using uni_str = uni_string<RefEnc>;
-	template<typename RefEnc = default_ecoding> using UniStr = uni_string<RefEnc>;
+	template<typename RefEnc = default_uni_str_enc> using UniString = uni_string<RefEnc>;
+	template<typename RefEnc = default_uni_str_enc> using uni_str   = uni_string<RefEnc>;
+	template<typename RefEnc = default_uni_str_enc> using UniStr    = uni_string<RefEnc>;
 
-	using string    = uni_string<default_ecoding>;
-	using String    = uni_string<default_ecoding>;
+	using string    = uni_string<default_uni_str_enc>;
+	using String    = uni_string<default_uni_str_enc>;
 
 	using astring   = uni_string<ASCII<>>;
 	using wstring   = uni_string<Wide<>>;
@@ -341,20 +320,6 @@ namespace oct {
 
 template<typename CharTy, class Traits>
 std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits>& os, const oct::byte_vector& bytes);
-
-
-
-namespace oct {
-	//Unused function
-	template<typename CharTy>
-	UNI_STR_STRLEN_CONSTEXPR size_t str_len(const CharTy* c_str);
-
-
-	namespace impl {
-		template<typename CharTy, size_t StrSize>
-		constexpr inline size_t trimmed_size(const CharTy(&str_arr)[StrSize]);
-	}
-}
 
 
 

@@ -4,6 +4,15 @@
 #include <string>
 #include <type_traits>
 #include <array>
+#include <cstdint>
+
+
+#ifdef UNI_STR_USE_STD_STRLEN
+#define UNI_STR_STRLEN_CONSTEXPR UNI_STR_CPP17_CONSTEXPR
+#else
+#define UNI_STR_STRLEN_CONSTEXPR UNI_STR_CPP14_CONSTEXPR
+#endif
+
 
 
 namespace oct {
@@ -132,13 +141,7 @@ namespace oct {
 
 		constexpr inline oct::UTF16<>::char_type lead_surrogate(oct::unicode_cp_t code_point) noexcept;
 		constexpr inline oct::UTF16<>::char_type trail_surrogate(oct::unicode_cp_t code_point) noexcept;
-
-
-
-		template <typename Enc>
-		constexpr inline size_t capacity_for(const typename Enc::storage_type* str, size_t size);
 	}
-
 
 
 	namespace impl {
@@ -171,6 +174,16 @@ namespace oct {
 
 			constexpr static inline bool is_supplementary_plane(oct::unicode_cp_t cp, uint32_t& trail, const StorageTy* src_str, size_t& i, size_t src_size);
 		};
+	}
+
+
+
+	namespace impl {
+		template<typename CharTy> UNI_STR_STRLEN_CONSTEXPR
+			size_t str_len(const CharTy* str);
+
+		template <typename Enc>
+		constexpr inline size_t capacity_for(const typename Enc::storage_type* str, size_t size);
 	}
 }
 

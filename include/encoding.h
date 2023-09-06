@@ -30,7 +30,6 @@ namespace oct {
 	using Wide  = Encoding<wchar_t, StoredAs>;
 
 
-
 	template<size_t target_char_size>
 	struct default_encoding { 
 		static_assert(target_char_size != target_char_size, "Invalid char size for type default_encoding!");
@@ -50,4 +49,7 @@ namespace oct {
 
 	template<typename Enc>
 	using common_encoding = default_encoding_t<Enc::char_size>;
+
+
+	using NativeWide = Encoding<default_encoding_char_t<sizeof(wchar_t)>, wchar_t>;
 }

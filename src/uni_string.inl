@@ -1,5 +1,5 @@
 #include "../include/uni_string.hpp"
-#include "../include/conversion.hpp"
+
 #include <iterator>
 #include <array>
 #include <sstream>
@@ -83,7 +83,7 @@ namespace oct {
 	template<typename StrEnc>
 	template<typename CharTy, size_t StrSize> UNI_STR_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::operator=(const CharTy(&str_arr)[StrSize]) {
-		data_str = oct::convert<Encoding<CharTy>, StrEnc>(str_arr, impl::trimmed_size(str_arr));
+		data_str = oct::convert<Encoding<CharTy>, StrEnc>(&str_arr[0], impl::trimmed_size(str_arr));
 		return *this;
 	}
 }
@@ -136,23 +136,8 @@ namespace oct {
 	}
 
 
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	typename uni_string<StrEnc>::char_type* uni_string<StrEnc>::data() noexcept {
-		return data_str.data();
-	}
-
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	const typename uni_string<StrEnc>::char_type* uni_string<StrEnc>::data() const noexcept {
-		return data_str.data();
-	}
-
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	const typename uni_string<StrEnc>::char_type* uni_string<StrEnc>::c_str() const noexcept {
-		return data_str.c_str();
-	}
-
-
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename StrEnc>
+	template<typename CharTy> UNI_STR_CPP20_CONSTEXPR
 	byte_vector uni_string<StrEnc>::bytes() const {
 		using data_str_char_type = typename decltype(data_str)::value_type;
 
@@ -179,32 +164,10 @@ namespace oct {
 
 
 namespace oct {
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	typename uni_string<StrEnc>::char_type& uni_string<StrEnc>::operator[](size_t pos) {
-		return data_str[pos];
-	}
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	const typename uni_string<StrEnc>::char_type& uni_string<StrEnc>::operator[](size_t pos) const {
-		return data_str[pos];
-	}
-
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	typename uni_string<StrEnc>::char_type& uni_string<StrEnc>::at(size_t pos) {
-		return data_str.at(pos);
-	}
-	template<typename StrEnc> UNI_STR_CPP20_CONSTEXPR
-	const typename uni_string<StrEnc>::char_type& uni_string<StrEnc>::at(size_t pos) const {
-		return data_str.at(pos);
-	}
-}
-
-
-
-namespace oct {
 	template<typename StrEnc>
 	template<typename OtherEncoding> UNI_STR_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::prepend(const uni_string<OtherEncoding>& uni_str) {
-		data_str.insert(0, uni_str.to_str<StrEnc>());
+		data_str.insert(0, uni_str.template to_str<StrEnc>());
 		return *this;
 	}
 
@@ -272,10 +235,10 @@ namespace oct {
 
 
 namespace oct {
-		template<typename StrEnc>
+	template<typename StrEnc>
 	template<typename OtherEncoding> UNI_STR_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::append(const uni_string<OtherEncoding>& uni_str) {
-		data_str.append(uni_str.to_str<StrEnc>());
+		data_str.append(uni_str.template to_str<StrEnc>());
 		return *this;
 	}
 
@@ -373,14 +336,14 @@ namespace oct {
 namespace oct {
 	template<class CharTy, class Traits, typename StrEnc>
 	std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits>& os, const uni_string<StrEnc>& str) {
-		return os << static_cast<std::basic_string<CharTy>>(str);
+		return os << str.template to_str<Encoding<CharTy>>();
 	}
 
 	template<class CharTy, class Traits, typename StrEnc>
 	std::basic_istream<CharTy, Traits>& operator>>(std::basic_istream<CharTy, Traits>& is, uni_string<StrEnc>& str) {
 		std::basic_string<CharTy, Traits> input;
 		is >> input;
-		str.data_str = input;
+		str = input;
 		return is;
 	}
 }
@@ -560,33 +523,6 @@ std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits
 	os << oss.str() << os.widen(']');
 	return os;
 }
-
-
-
-namespace oct {
-	template<typename CharTy>
-	UNI_STR_STRLEN_CONSTEXPR size_t str_len(const CharTy* str) {
-#ifdef UNI_STR_USE_STD_STRLEN
-		return std::char_traits<CharTy>::length(str);
-#else
-		if (!str) return nsize;
-		const CharTy* end = str;
-		for (; *end; ++end);
-		return (end - str);
-#endif
-	}
-}
-
-
-namespace oct {
-	namespace impl {
-		template<typename CharTy, size_t StrSize>
-		constexpr inline size_t trimmed_size(const CharTy(&str_arr)[StrSize]) {
-			return StrSize - (StrSize > 0 && str_arr[StrSize - 1] == 0);
-		}
-	}
-}
-
 
 
 namespace oct {

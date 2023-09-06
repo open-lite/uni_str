@@ -27,6 +27,31 @@
 #endif
 
 
+//Maybe rename to US_CPP14(_CONSTEXPR)?
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201402L) || __cplusplus >= 201402L)
+#define UNI_STR_CPP14 true
+#define UNI_STR_CPP14_CONSTEXPR constexpr
+#else 
+#define UNI_STR_CPP14_CONSTEXPR
+#endif
+
+
+
+#if defined(__clang__) || defined(__GNUC__)
+#define UNI_STR_PUSH_WARN_PRE_CPP14 \
+_Pragma("GCC diagnostic push") \
+_Pragma("GCC diagnostic ignored \"-Wpre-c++14-compat\"")
+
+#define UNI_STR_POP_WARN \
+_Pragma("GCC diagnostic pop")
+
+#else
+#define UNI_STR_PUSH_WARN_PRE_CPP14
+#define UNI_STR_POP_WARN
+#endif
+
+
+
 namespace oct {
 #ifdef UNI_STR_CPP20
 	using uni_str_char8_t = char8_t;
@@ -52,21 +77,42 @@ namespace oct {
 }
 
 
-#ifndef OCT_ENDIAN
-#define OCT_ENDIAN
 namespace oct {
-	namespace endian {
-		namespace impl {
-			constexpr uint32_t test_u32  = 0x01020304;
-			constexpr uint8_t  test_byte = (const uint8_t&)test_u32;
-		}
+	template<typename CharTy, typename EnableTy = bool>
+	using enable_if_char = typename std::enable_if<std::is_integral<CharTy>::value, EnableTy>::type;
 
-		constexpr bool little = impl::test_byte == 0x4;
-		constexpr bool big    = impl::test_byte == 0x1;
+
+	template<typename InputIt, typename EnableTy = bool>
+	using enable_if_input_iter = typename std::enable_if<
+		std::is_base_of<
+		std::input_iterator_tag,
+		typename std::iterator_traits<InputIt>::iterator_category
+		>::value,
+	EnableTy>::type;
+}
+
+
+namespace oct {
+	template <typename> 
+	struct is_tuple : std::false_type {};
+
+	template <typename... Ts> 
+	struct is_tuple<std::tuple<Ts...>> : std::true_type {};
+
+	template<typename Tuple, typename EnableTy = bool>
+	using enable_if_tuple = typename std::enable_if<is_tuple<Tuple>::value, EnableTy>::type;
+}
+
+
+
+namespace oct {
+	namespace impl {
+		template<typename CharTy, size_t StrSize>
+		constexpr inline size_t trimmed_size(const CharTy(&str_arr)[StrSize]) {
+			return StrSize - (StrSize > 0 && str_arr[StrSize - 1] == 0);
+		}
 	}
 }
-#endif
-
 
 
 #if defined(UNI_STR_CPP17) && !defined(UNI_STR_NO_BYTE_OUTPUT_OVERLOAD)

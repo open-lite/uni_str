@@ -1,6 +1,6 @@
 #include "../include/conversion.hpp"
 #include <type_traits>
-#include <cstdint>
+
 
 namespace oct {
     template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
@@ -180,7 +180,7 @@ namespace oct {
 
         size_t i = 0;
         oct::unicode_cp_t ch;
-        uint32_t trail;
+        uint32_t trail = 0;
 
         while (src_size != nsize ? i < src_size : src_str[i]) {
             ch = src_str[i++];
@@ -250,18 +250,10 @@ namespace oct {
             return static_cast<oct::UTF16<>::char_type>(0xDC00 + (code_point & 0x3FF));
         }
     }
+}
 
 
-
-    namespace impl {
-        template <typename Enc>
-        constexpr size_t capacity_for(const typename Enc::storage_type* str, size_t size) {
-            return (std::max)(impl::unicode_short_stackbuf_size, size == nsize ? str_len(str) : size + 1);
-        }
-    }
-
-
-
+namespace oct{
     namespace impl {
         //If the source is UTF16, get the supplementary code point. Otherwise, return the same code point.
         template<typename Enc>
@@ -298,6 +290,36 @@ namespace oct {
         template<typename StorageTy>
         constexpr bool oct::impl::utf<oct::UTF16<StorageTy>>::is_supplementary_plane(oct::unicode_cp_t cp, uint32_t& trail, const StorageTy* src_str, size_t& i, size_t src_size) {
             return (cp & 0x400) == 0 && i < src_size && ((trail = src_str[i++]) || src_size != nsize) && 0xDC00 <= trail && trail <= 0xDFFF;
+        }
+    }
+}
+
+
+
+namespace oct {
+    namespace impl {
+
+        template<typename CharTy> UNI_STR_STRLEN_CONSTEXPR
+        size_t str_len(const CharTy* str) {
+        #ifdef UNI_STR_USE_STD_STRLEN
+            return std::char_traits<CharTy>::length(str);
+
+        #else
+            UNI_STR_PUSH_WARN_PRE_CPP14
+
+            if (!str) return nsize;
+            const CharTy* end = str;
+            for (; *end; ++end);
+            return (end - str);
+
+            UNI_STR_POP_WARN
+        #endif
+        }
+        
+
+        template <typename Enc>
+        constexpr size_t capacity_for(const typename Enc::storage_type* str, size_t size) {
+            return (std::max)(impl::unicode_short_stackbuf_size, size == nsize ? str_len(str) : size + 1);
         }
     }
 }
