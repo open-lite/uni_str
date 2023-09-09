@@ -11,7 +11,8 @@ __VA_ARGS__																			    \
 																					    \
 "You have version " OCT_STR(new_major) "." OCT_STR(new_minor) " available. "            \
 																					    \
-"Set " #old_major "=" OCT_STR(new_major) " and " #old_minor "=" OCT_STR(new_minor) " "  \
+"Update your other OCT libaries OR "													\
+"set " #old_major "=" OCT_STR(new_major) " and " #old_minor "=" OCT_STR(new_minor) " "  \
 "in your project to use version " OCT_STR(new_major) "." OCT_STR(new_minor)
 
 
