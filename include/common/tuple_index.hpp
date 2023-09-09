@@ -6,6 +6,9 @@
 
 #include "cpp_defs.h"
 
+#ifndef OCT_TUPLE_INDEX
+#define OCT_TUPLE_INDEX
+
 
 #if !defined(__cpp_lib_apply) || __cpp_lib_apply < 201603L
 #define UNI_STR_APPLY_IMPL \
@@ -148,3 +151,5 @@ namespace oct {
 #include "../../src/tuple_index.inl"
 
 #undef UNI_STR_APPLY_IMPL
+
+#endif

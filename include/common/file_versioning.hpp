@@ -26,6 +26,7 @@ __VA_ARGS__																			    \
 /// NOTE: 
 /// Only use when you forsee that said header could have changes (that actually affect end-user code) in the future. 
 /// If you do use this template, list why in the file you're using it in.
+/// If you do not forsee such changes, then just use a common include guard instead of this template
 
 // REPLACE: <INCLUDES>, <EXPLANATION>, <HEADER>, <LIBRARY>, <OPTIONAL_CONSEQUENCE_EXPLANATION>, <VERSION_MAJOR>, <VERSION_MINOR>
 
