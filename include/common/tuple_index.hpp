@@ -2,6 +2,9 @@
 
 #include <tuple>
 #include <type_traits>
+#include <utility>
+
+#include "cpp_defs.h"
 
 
 #if !defined(__cpp_lib_apply) || __cpp_lib_apply < 201603L
@@ -42,13 +45,13 @@ namespace oct {
 
 namespace oct {
 	template<typename Func, typename Tuple, typename... PrependArgs> 
-	UNI_STR_CPP14_CONSTEXPR auto 
+	OCT_CPP14_CONSTEXPR auto 
 	apply(Func&& f, Tuple&& t, PrependArgs&&... prepended_args) ->
 		decltype(UNI_STR_APPLY_IMPL);
 
 
 	template<typename Func, typename Tuple> 
-	UNI_STR_CPP14_CONSTEXPR auto 
+	OCT_CPP14_CONSTEXPR auto 
 	apply_each(Func&& f, Tuple&& t) ->
 		void;
 }
@@ -81,7 +84,7 @@ namespace oct {
 		struct tuple_index<std::tuple<Head, Tail...>, T, ApplyMode, VerifyCount, I, count> : tuple_index<std::tuple<Tail...>, T, ApplyMode, VerifyCount, I + 1, count> {
 
 			template<typename Func, typename Tuple, typename... TupleElems>
-			UNI_STR_CPP14_CONSTEXPR static auto
+			OCT_CPP14_CONSTEXPR static auto
 			apply(Func&& f, Tuple&& t, TupleElems&&... tuple_elems) ->
 				decltype(tuple_index<std::tuple<Tail...>, T, ApplyMode, VerifyCount, I + 1, count>::
 					apply(std::forward<Func>(f), std::forward<Tuple>(t), std::forward<TupleElems>(tuple_elems)..., std::get<I>(t)));
@@ -94,7 +97,7 @@ namespace oct {
 			constexpr static size_t value = I;
 
 			template<typename Func, typename Tuple, typename... TupleElems> 
-			UNI_STR_CPP14_CONSTEXPR static auto 
+			OCT_CPP14_CONSTEXPR static auto 
 			apply(Func&& f, Tuple&& t, TupleElems&&... tuple_elems) ->
 				decltype(tuple_index<std::tuple<Rest...>, MatchingT, ApplyMode, VerifyCount, I + 1, count + 1>::
 					apply(std::forward<Func>(f), std::forward<Tuple>(t), std::forward<TupleElems>(tuple_elems)..., std::get<I>(t)));
@@ -114,7 +117,7 @@ namespace oct {
 		template<>
 		struct apply_impl<apply_fn_mode::ApplyEach> {
 			template<typename Func, typename Tuple, typename... TupleElems>
-			UNI_STR_CPP14_CONSTEXPR static auto
+			OCT_CPP14_CONSTEXPR static auto
 			apply(Func&& f, Tuple&& t, TupleElems&&... tuple_elems) ->
 				void;
 		};
@@ -122,7 +125,7 @@ namespace oct {
 		template<>
 		struct apply_impl<apply_fn_mode::Apply> {
 			template<typename Func, typename Tuple, typename... TupleElems>
-			UNI_STR_CPP14_CONSTEXPR static auto
+			OCT_CPP14_CONSTEXPR static auto
 			apply(Func&& f, Tuple&& t, TupleElems&&... tuple_elems) ->
 				decltype(std::forward<Func>(f)(std::forward<TupleElems>(tuple_elems)...));
 		};
@@ -130,7 +133,7 @@ namespace oct {
 		template<>
 		struct apply_impl<apply_fn_mode::None> {
 			template<typename Func, typename Tuple, typename... TupleElems>
-			UNI_STR_CPP14_CONSTEXPR static auto
+			OCT_CPP14_CONSTEXPR static auto
 			apply(Func&&, Tuple&&, TupleElems&&...) -> void {
 				static_assert(!std::is_same<Func, Func>::value,
 					"Cannot call tuple_index<...>::apply() when ApplyMode = apply_fn_mode::None!");
@@ -142,6 +145,6 @@ namespace oct {
 
 
 
-#include "tuple_index.inl"
+#include "../../src/tuple_index.inl"
 
 #undef UNI_STR_APPLY_IMPL

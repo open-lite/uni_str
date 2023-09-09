@@ -1,13 +1,12 @@
-#include "tuple_index.hpp"
+#include "../include/common/tuple_index.hpp"
 
-#include <utility>
 #include <initializer_list>
 
 
 
 namespace oct {
 	template<typename Func, typename Tuple, typename... PrependArgs>
-	auto UNI_STR_CPP14_CONSTEXPR
+	auto OCT_CPP14_CONSTEXPR
 	apply(Func&& f, Tuple&& t, PrependArgs&&... prepended_args) ->
 		decltype(UNI_STR_APPLY_IMPL) {
 
@@ -16,7 +15,7 @@ namespace oct {
 
 
 	template<typename Func, typename Tuple>
-	auto UNI_STR_CPP14_CONSTEXPR
+	auto OCT_CPP14_CONSTEXPR
 	apply_each(Func&& f, Tuple&& t) -> void {
 		return impl::tuple_index<typename std::decay<Tuple>::type, void, impl::apply_fn_mode::ApplyEach, false>::
 			apply(std::forward<Func>(f), std::forward<Tuple>(t));
@@ -41,7 +40,7 @@ namespace oct {
 	namespace impl {
 		template<typename T, typename Head, typename... Tail, apply_fn_mode ApplyMode, bool VerifyCount, size_t I, size_t count>
 		template<typename Func, typename Tuple, typename... TupleElems>
-		UNI_STR_CPP14_CONSTEXPR auto 
+		OCT_CPP14_CONSTEXPR auto 
 		tuple_index<std::tuple<Head, Tail...>, T, ApplyMode, VerifyCount, I, count>::
 		apply(Func&& f, Tuple&& t, TupleElems&&... tuple_elems) ->
 			decltype(tuple_index<std::tuple<Tail...>, T, ApplyMode, VerifyCount, I + 1, count>::
@@ -57,7 +56,7 @@ namespace oct {
 
 		template<typename MatchingT, typename... Rest, apply_fn_mode ApplyMode, bool VerifyCount, size_t I, size_t count>
 		template<typename Func, typename Tuple, typename... TupleElems>
-		UNI_STR_CPP14_CONSTEXPR auto 
+		OCT_CPP14_CONSTEXPR auto 
 		tuple_index<std::tuple<MatchingT, Rest...>, MatchingT, ApplyMode, VerifyCount, I, count>::
 		apply(Func&& f, Tuple&& t, TupleElems&&... tuple_elems) ->
 			decltype(tuple_index<std::tuple<Rest...>, MatchingT, ApplyMode, VerifyCount, I + 1, count + 1>::
@@ -77,10 +76,10 @@ namespace oct {
 namespace oct {
 	namespace impl {
 		template<typename Func, typename Tuple, typename... TupleElems>
-		UNI_STR_CPP14_CONSTEXPR auto
+		OCT_CPP14_CONSTEXPR auto
 		apply_impl<apply_fn_mode::ApplyEach>::
 		apply(Func&& f, Tuple&&, TupleElems&&... tuple_elems) -> void {
-			UNI_STR_PUSH_WARN_PRE_CPP14
+			OCT_PUSH_WARN_PRE_CPP14
 
 			using expander = std::initializer_list<int>;
 			(void)expander {
@@ -88,11 +87,11 @@ namespace oct {
 			};
 			return;
 
-			UNI_STR_POP_WARN
+			OCT_POP_WARN
 		}
 
 		template<typename Func, typename Tuple, typename... TupleElems>
-		UNI_STR_CPP14_CONSTEXPR auto
+		OCT_CPP14_CONSTEXPR auto
 		apply_impl<apply_fn_mode::Apply>::
 		apply(Func&& f, Tuple&&, TupleElems&&... tuple_elems) ->
 			decltype(std::forward<Func>(f)(std::forward<TupleElems>(tuple_elems)...)) {

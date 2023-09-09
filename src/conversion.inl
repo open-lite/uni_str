@@ -3,12 +3,12 @@
 
 
 namespace oct {
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_same_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return src_str;
     }
 
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_same_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         return std::basic_string<typename ToEnc::storage_type>(src_str, src_size);
     }
@@ -16,12 +16,12 @@ namespace oct {
 
 
 namespace oct {
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_same_size_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return std::basic_string<typename ToEnc::storage_type>(src_str.begin(), src_str.cend());
     }
 
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_same_size_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         return std::basic_string<typename ToEnc::storage_type>(
             reinterpret_cast<const typename ToEnc::storage_type*>(src_str), src_size
@@ -31,12 +31,12 @@ namespace oct {
 
 
 namespace oct {
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_from_utf8_sized_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_from_utf8_sized_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         std::basic_string<typename ToEnc::storage_type> ret;
         ret.reserve(impl::capacity_for<FromEnc>(src_str, src_size));
@@ -108,12 +108,12 @@ namespace oct {
     
 
 namespace oct {
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_to_utf8_sized_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_to_utf8_sized_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         //using ToStorageTy = typename ToEnc::storage_type;
         std::basic_string<typename ToEnc::storage_type> ret = std::basic_string<typename ToEnc::storage_type>();
@@ -168,12 +168,12 @@ namespace oct {
 
 
 namespace oct {
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_utf_16_to_32_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_utf_16_to_32_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         std::basic_string<typename ToEnc::storage_type> ret;
         ret.reserve(impl::capacity_for<FromEnc>(src_str, src_size));
@@ -205,12 +205,12 @@ namespace oct {
 
 
 namespace oct{
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_utf_32_to_16_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_utf_32_to_16_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         std::basic_string<typename ToEnc::storage_type> ret;
         ret.reserve(impl::capacity_for<FromEnc>(src_str, src_size));
@@ -305,14 +305,14 @@ namespace oct {
             return std::char_traits<CharTy>::length(str);
 
         #else
-            UNI_STR_PUSH_WARN_PRE_CPP14
+            OCT_PUSH_WARN_PRE_CPP14
 
             if (!str) return nsize;
             const CharTy* end = str;
             for (; *end; ++end);
             return (end - str);
 
-            UNI_STR_POP_WARN
+            OCT_POP_WARN
         #endif
         }
         

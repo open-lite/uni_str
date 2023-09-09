@@ -1,26 +1,20 @@
 #pragma once
-#include "common.h"
-#include "encoding.h"
+
 #include <string>
 #include <type_traits>
 #include <array>
 #include <cstdint>
 
+#include "common/type_defs.hpp"
+#include "common/cpp_defs.h"
+#include "encoding.hpp"
+
 
 #ifdef UNI_STR_USE_STD_STRLEN
-#define UNI_STR_STRLEN_CONSTEXPR UNI_STR_CPP17_CONSTEXPR
+#define UNI_STR_STRLEN_CONSTEXPR OCT_CPP17_CONSTEXPR
 #else
-#define UNI_STR_STRLEN_CONSTEXPR UNI_STR_CPP14_CONSTEXPR
+#define UNI_STR_STRLEN_CONSTEXPR OCT_CPP14_CONSTEXPR
 #endif
-
-
-
-namespace oct {
-	template <typename Encoding>
-	using storage_t = typename Encoding::storage_type;
-
-	constexpr size_t nsize = std::numeric_limits<size_t>::max();
-}
 
 
 namespace oct {
@@ -83,55 +77,59 @@ namespace oct {
 
 namespace oct {
 	// Same exact encoding (shortcut; just returns passed variable)
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_same_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str);
 
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_same_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size);
 
 
 	// Same sized encodings
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR 
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR 
 	impl::enable_if_same_size_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str);
 
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_same_size_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size);
 	
 
 	// Single byte to higher encodings
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_from_utf8_sized_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str);
 
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_from_utf8_sized_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size);
 
 
 	// Higher encodings to single byte
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_to_utf8_sized_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str);
 
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_to_utf8_sized_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size);
 
 
 	// From UTF-16 to UTF-32
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_utf_16_to_32_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str);
 
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_utf_16_to_32_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size);
 
 	
 	// From UTF-32 to UTF-16
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_utf_32_to_16_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str);
 
-	template<typename FromEnc, typename ToEnc> UNI_STR_CPP20_CONSTEXPR
+	template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
 	impl::enable_if_utf_32_to_16_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size);
 }
 
 
 namespace oct {
+
+	using unicode_cp_t = int32_t;
+
+
 	namespace impl {
 		constexpr size_t unicode_short_stackbuf_size = (64 - sizeof(void*) - 2) / 2;
 		constexpr oct::unicode_cp_t utf16_surrogate_offset = ((0xD800 << 10UL) + 0xDC00 - 0x10000);

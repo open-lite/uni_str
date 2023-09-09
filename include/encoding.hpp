@@ -1,6 +1,8 @@
 #pragma once
 #include <cstddef>
 
+#include "common/type_defs.hpp"
+
 namespace oct {
 	template<typename CharTy, typename StoreAs = CharTy>
 	struct Encoding {
@@ -17,8 +19,8 @@ namespace oct {
 	template <typename StoredAs = char>            
 	using ASCII = Encoding<char, StoredAs>;
 
-	template <typename StoredAs = uni_str_char8_t>
-	using UTF8  = Encoding<uni_str_char8_t, StoredAs>;
+	template <typename StoredAs = uchar8_t>
+	using UTF8  = Encoding<uchar8_t, StoredAs>;
 
 	template <typename StoredAs = char16_t>
 	using UTF16 = Encoding<char16_t, StoredAs>;
