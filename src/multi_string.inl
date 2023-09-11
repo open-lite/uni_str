@@ -1,5 +1,7 @@
 #include "../include/multi_string.hpp"
 
+#include "common/apply.hpp"
+
 #include <functional>
 
 
@@ -330,9 +332,8 @@ namespace oct {
 	template<typename Enc>
 	struct multi_uni_string<Encs...>::contains :
 		impl::tuple_index<
-			typename multi_uni_string<Encs...>::internal_tuple_type, uni_string<Enc>, 
-			impl::apply_fn_mode::None, false
-		>::valid_type {};
+			typename multi_uni_string<Encs...>::internal_tuple_type, uni_string<Enc>, false
+		>::valid {};
 
 	#ifdef OCT_CPP17
 	template<typename Enc, typename MultiStr>

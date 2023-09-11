@@ -3,9 +3,9 @@
 #include <string>
 
 #include "common/cpp_defs.h"
+#include "common/get.hpp"
 #include "encoding.hpp"
 #include "uni_string.hpp"
-#include "common/tuple_index.hpp"
 
 #include <functional>
 
@@ -187,12 +187,12 @@ namespace oct{
 		template<typename Enc> 
 		OCT_CPP14_CONSTEXPR auto 
 		get_internal_str() const noexcept -> typename std::enable_if<contains<Enc>::value,
-			decltype(oct::get<uni_string<Enc>>(strings)) >::type;
+			decltype(oct::get<uni_string<Enc>>(strings))>::type;
 
 		template<typename Enc>
 		OCT_CPP14_CONSTEXPR auto
 		get_internal_str() const noexcept -> typename std::enable_if<!contains<Enc>::value, 
-			uni_string<Enc> >::type;
+			uni_string<Enc>>::type;
 	};
 
 
