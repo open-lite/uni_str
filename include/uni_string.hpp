@@ -12,8 +12,9 @@
 #ifdef OCT_CPP20
 #include <compare>
 #endif
-#include "../src/uni_string_internal.hpp"
 
+
+namespace oct { using default_uni_str_enc = UTF16<>; }
 
 
 namespace oct {
@@ -43,17 +44,17 @@ namespace oct {
 		template<typename CharTy, size_t StrSize> OCT_CPP20_CONSTEXPR
 		uni_string(const CharTy (&str_arr)[StrSize]);
 		
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string(CharTy c);
 
 		
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string(size_t count, CharTy c);
 
 		template<typename InputIt, enable_if_input_iter<InputIt> = true> OCT_CPP20_CONSTEXPR
 		uni_string(InputIt srcBegin, InputIt srcEnd);
 
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string(std::initializer_list<CharTy> char_list);
 		
 
@@ -92,8 +93,7 @@ namespace oct {
 		OCT_CPP20_CONSTEXPR size_t length() const noexcept;
 
 
-		template<typename CharTy = internal_type> OCT_CPP20_CONSTEXPR
-		byte_vector bytes() const;
+		OCT_CPP20_CONSTEXPR byte_vector bytes() const;
 
 
 
@@ -113,11 +113,11 @@ namespace oct {
 		template<typename CharTy, size_t StrSize> OCT_CPP20_CONSTEXPR
 		uni_string& prepend(const CharTy(&str_arr)[StrSize]);
 		
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& prepend(CharTy c);
 
 		
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& prepend(size_t count, CharTy c);
 
 		template<typename CharTy> OCT_CPP20_CONSTEXPR
@@ -126,7 +126,7 @@ namespace oct {
 		template<typename InputIt, enable_if_input_iter<InputIt> = true> OCT_CPP20_CONSTEXPR
 		uni_string& prepend(InputIt srcBegin, InputIt srcEnd);
 
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& prepend(std::initializer_list<CharTy> char_list);
 
 
@@ -143,11 +143,11 @@ namespace oct {
 		template<typename CharTy, size_t StrSize> OCT_CPP20_CONSTEXPR
 		uni_string& append(const CharTy(&str_arr)[StrSize]);
 		
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& append(CharTy c);
 
 
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& append(size_t count, CharTy c);
 
 		template<typename CharTy> OCT_CPP20_CONSTEXPR
@@ -156,7 +156,7 @@ namespace oct {
 		template<typename InputIt, enable_if_input_iter<InputIt> = true> OCT_CPP20_CONSTEXPR
 		uni_string& append(InputIt srcBegin, InputIt srcEnd);
 
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& append(std::initializer_list<CharTy> char_list);
 
 
@@ -172,11 +172,11 @@ namespace oct {
 		template<typename CharTy, size_t StrSize> OCT_CPP20_CONSTEXPR
 		uni_string& operator+=(const CharTy(&str_arr)[StrSize]);
 
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& operator+=(CharTy c);
 		
 
-		template<typename CharTy, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+		template<typename CharTy, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 		uni_string& operator+=(std::initializer_list<CharTy> char_list);
 
 
@@ -224,10 +224,10 @@ namespace oct {
 	uni_string<StrEnc> operator+(const uni_string<StrEnc>& lhs, const CharTy(&rhs)[StrSize]);
 
 
-	template<typename CharTy, class StrEnc, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, class StrEnc, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(uni_string<StrEnc>&& lhs, CharTy rhs);
 
-	template<typename CharTy, class StrEnc, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, class StrEnc, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(const uni_string<StrEnc>& lhs, CharTy rhs);
 
 
@@ -253,10 +253,10 @@ namespace oct {
 	uni_string<StrEnc> operator+(const CharTy(&lhs)[StrSize], const uni_string<StrEnc>& rhs);
 
 
-	template<typename CharTy, class StrEnc, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, class StrEnc, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(CharTy lhs, uni_string<StrEnc>&& rhs);
 
-	template<typename CharTy, class StrEnc, enable_if_char<CharTy> = true> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, class StrEnc, enable_if_integral<CharTy> = true> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(CharTy lhs, const uni_string<StrEnc>& rhs);
 
 	
@@ -308,8 +308,16 @@ namespace oct {
 }
 
 
-template<typename CharTy, class Traits>
-std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits>& os, const oct::byte_vector& bytes);
+template<typename CharTy, class Traits, typename ByteCollection, oct::enable_if_byte_collection<ByteCollection> = true>
+std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits>& os, const ByteCollection& bytes);
 
+
+
+namespace oct {
+	namespace impl {
+		template<typename CharTy, size_t StrSize>
+		constexpr inline size_t trimmed_size(const CharTy(&str_arr)[StrSize]);
+	}
+}
 
 #include "../src/uni_string.inl"

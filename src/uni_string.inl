@@ -5,6 +5,8 @@
 #include <sstream>
 #include <iomanip>
 
+#include "common/split_into_bytes.hpp"
+
 
 namespace oct {
 	template<typename StrEnc>
@@ -28,13 +30,13 @@ namespace oct {
 		: uni_string(&str_arr[0], impl::trimmed_size(str_arr)) {}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>::uni_string(CharTy c)
 		: uni_string(1, c) {}
 
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>::uni_string(size_t count, CharTy c)
 		: data_str(oct::convert<Encoding<CharTy>, StrEnc>(std::basic_string<CharTy>(count, c))) {}
 
@@ -51,7 +53,7 @@ namespace oct {
 		)) {}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>::uni_string(std::initializer_list<CharTy> char_list)
 		: data_str(oct::convert<Encoding<CharTy>, StrEnc>(std::data(char_list), char_list.size())) {}
 }
@@ -136,16 +138,15 @@ namespace oct {
 	}
 
 
-	template<typename StrEnc>
-	template<typename CharTy> OCT_CPP20_CONSTEXPR
+	template<typename StrEnc> OCT_CPP20_CONSTEXPR
 	byte_vector uni_string<StrEnc>::bytes() const {
 		using data_str_char_type = typename decltype(data_str)::value_type;
 
 		byte_vector ret;
-		ret.reserve(impl::bytes_per_char<data_str_char_type>());
+		ret.reserve(bytes_per_char<data_str_char_type>());
 
 		for (data_str_char_type ch : data_str) {
-			impl::byte_array<data_str_char_type> bs = split_into_bytes(ch);
+			byte_array<data_str_char_type> bs = split_into_bytes(ch);
 			ret.insert(ret.end(), bs.begin(), bs.end());
 		}
 		return ret;
@@ -191,14 +192,14 @@ namespace oct {
 	}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::prepend(CharTy c) {
 		return prepend(1, c);
 	}
 
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::prepend(size_t count, CharTy c) {
 		data_str.insert(0, oct::convert<Encoding<CharTy>, StrEnc>(std::basic_string<CharTy>(count, c)));
 		return *this;
@@ -226,7 +227,7 @@ namespace oct {
 	}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::prepend(std::initializer_list<CharTy> char_list) {
 		data_str.insert(0, oct::convert<Encoding<CharTy>, StrEnc>(std::data(char_list), char_list.size()));
 		return *this;
@@ -262,14 +263,14 @@ namespace oct {
 	}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::append(CharTy c) {
 		return append(1, c);
 	}
 
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::append(size_t count, CharTy c) {
 		data_str.append(oct::convert<Encoding<CharTy>, StrEnc>(std::basic_string<CharTy>(count, c)));
 		return *this;
@@ -297,7 +298,7 @@ namespace oct {
 	}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::append(std::initializer_list<CharTy> char_list) {
 		data_str.append(oct::convert<Encoding<CharTy>, StrEnc>(std::data(char_list), char_list.size()));
 		return *this;
@@ -313,7 +314,7 @@ namespace oct {
 	}
 
 	template<typename StrEnc>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::operator+=(CharTy c) {
 		return append(c);
 	}
@@ -404,13 +405,13 @@ namespace oct {
 	}
 
 
-	template<typename CharTy, typename StrEnc, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, typename StrEnc, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(uni_string<StrEnc>&& lhs, CharTy rhs) {
 		lhs += rhs;
 		return lhs;
 	}
 	
-	template<typename CharTy, typename StrEnc, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, typename StrEnc, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(const uni_string<StrEnc>& lhs, CharTy rhs) {
 		uni_string<StrEnc> ret(lhs);
 		return ret.append(rhs);
@@ -456,12 +457,12 @@ namespace oct {
 	}
 
 
-	template<typename CharTy, typename StrEnc, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, typename StrEnc, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(CharTy lhs, uni_string<StrEnc>&& rhs) {
 		return rhs.prepend(lhs);
 	}
 
-	template<typename CharTy, typename StrEnc, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, typename StrEnc, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc> operator+(CharTy lhs, const uni_string<StrEnc>& rhs) {
 		uni_string<StrEnc> ret(rhs);
 		return ret.prepend(lhs);
@@ -511,8 +512,8 @@ namespace oct {
 
 
 
-template<typename CharTy, class Traits>
-std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits>& os, const oct::byte_vector& bytes) {
+template<typename CharTy, class Traits, typename ByteCollection, oct::enable_if_byte_collection<ByteCollection>>
+std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits>& os, const ByteCollection& bytes) {
 	os << os.widen('[');
 	std::basic_ostringstream<CharTy, Traits> oss;
 	oss << std::hex << std::setfill(oss.widen('0'));
@@ -522,4 +523,15 @@ std::basic_ostream<CharTy, Traits>& operator<<(std::basic_ostream<CharTy, Traits
 		oss << std::uppercase << std::setw(2) << static_cast<unsigned int>(bytes.back()) << std::nouppercase;
 	os << oss.str() << os.widen(']');
 	return os;
+}
+
+
+
+namespace oct {
+	namespace impl {
+		template<typename CharTy, size_t StrSize>
+		constexpr size_t trimmed_size(const CharTy(&str_arr)[StrSize]) {
+			return StrSize - (StrSize > 0 && str_arr[StrSize - 1] == 0);
+		}
+	}
 }

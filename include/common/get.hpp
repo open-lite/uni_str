@@ -1,4 +1,6 @@
 #pragma once
+#ifndef OCT_GET
+#define OCT_GET
 
 #include <tuple>
 
@@ -19,3 +21,4 @@ namespace oct {
 
 	using std::get;
 }
+#endif

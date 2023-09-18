@@ -30,13 +30,13 @@ namespace oct {
 		: multi_uni_string(&str_arr[0], impl::trimmed_size(str_arr)) {}
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>::multi_uni_string(CharTy c)
 		: multi_uni_string(1, c) {}
 
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>::multi_uni_string(size_t count, CharTy c)
 		: strings(std::make_tuple(uni_string<Encs>(count, c)...)) {}
 
@@ -46,7 +46,7 @@ namespace oct {
 		: strings(std::make_tuple(uni_string<Encs>(src_begin, src_end)...)) {}
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>::multi_uni_string(std::initializer_list<CharTy> char_list)
 		: strings(std::make_tuple(uni_string<Encs>(char_list)...)) {}
 }
@@ -163,14 +163,14 @@ namespace oct{
 	}
 	
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::prepend(CharTy c){
 		return prepend(1, c);
 	}
 
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::prepend(size_t count, CharTy c){
 		apply_to_each_str<impl::multi_str_prepend>(count, c);
 		return *this;
@@ -191,7 +191,7 @@ namespace oct{
 	}
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::prepend(std::initializer_list<CharTy> char_list){
 		apply_to_each_str<impl::multi_str_prepend>(char_list);
 		return *this;
@@ -228,14 +228,14 @@ namespace oct {
 	}
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::append(CharTy c) {
 		return append(1, c);
 	}
 
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::append(size_t count, CharTy c) {
 		apply_to_each_str<impl::multi_str_append>(count, c);
 		return *this;
@@ -256,7 +256,7 @@ namespace oct {
 	}
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::append(std::initializer_list<CharTy> char_list) {
 		apply_to_each_str<impl::multi_str_append>(char_list);
 		return *this;
@@ -272,7 +272,7 @@ namespace oct {
 	}
 
 	template<typename... Encs>
-	template<typename CharTy, enable_if_char<CharTy>> OCT_CPP20_CONSTEXPR
+	template<typename CharTy, enable_if_integral<CharTy>> OCT_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::operator+=(CharTy c) {
 		return append(c);
 	}
