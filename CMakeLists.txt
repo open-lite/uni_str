@@ -5,23 +5,29 @@ set(EXPORT_NAME "UNI_STR")
 option(LINK_32_BIT "Link the UniversalString library for a 32-bit target" OFF)
 
 list(APPEND HEADERS
-    "include/common.h"
+    "include/common/apply.hpp"
+    "include/common/cpp_defs.h"
+    "include/common/endian.hpp"
+    "include/common/file_versioning.hpp"
+    "include/common/get.hpp"
+    "include/common/integer_sequence.hpp"
+    "include/common/split_into_bytes.hpp"
+    "include/common/tuple_index.hpp"
+    "include/common/type_defs.hpp"
 
-    "include/encoding.h"
-
-    "include/endian.h"
-
-    "include/uni_string.hpp"
-    "src/uni_string.inl"
-
-    "include/multi_string.hpp"
-    "src/multi_string.inl"
+    "src/apply.inl"
+    
 
     "include/conversion.hpp"
     "src/conversion.inl"
 
-    "src/tuple_index.hpp"
-    "src/tuple_index.inl"
+    "include/encoding.hpp"
+
+    "include/multi_string.hpp"
+    "src/multi_string.inl"
+
+    "include/uni_string.hpp"
+    "src/uni_string.inl"
 )
 
 
