@@ -66,10 +66,10 @@ namespace oct{
 		std::basic_string<typename TargetEncoding::storage_type> to_str() const;
 
 
-		template<typename TargetEncoding>
+		template<typename TargetEncoding> OCT_CPP20_CONSTEXPR
 		explicit operator uni_string<TargetEncoding>() const;
 
-		template<class TargetEncoding>
+		template<class TargetEncoding> OCT_CPP20_CONSTEXPR
 		uni_string<TargetEncoding> to_uni_str() const;
 
 
