@@ -206,6 +206,8 @@ namespace oct{
 	using MultiString  = multi_uni_string<ASCII<>, UTF8<>, UTF16<>, UTF32<>, Wide<>>;
 	using multi_str    = multi_uni_string<ASCII<>, UTF8<>, UTF16<>, UTF32<>, Wide<>>;
 	using MultiStr     = multi_uni_string<ASCII<>, UTF8<>, UTF16<>, UTF32<>, Wide<>>;
+
+	template<typename... Encs> using cached_uni_string = multi_uni_string<Encs...>;
 }
 
 
@@ -230,5 +232,11 @@ namespace oct {
 	}
 }
 
+
+
+template<typename... Encs>
+struct std::hash<oct::multi_uni_string<Encs...>>{
+	std::size_t operator()(const oct::multi_uni_string<Encs...>& s) const noexcept;
+};
 
 #include "../src/multi_string.inl"

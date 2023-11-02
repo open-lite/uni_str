@@ -22,7 +22,8 @@ namespace oct {
 	struct uni_string {
 		using char_type = typename RefEncoding::char_type;
 		using storage_type = typename RefEncoding::storage_type;
-		using internal_type = storage_type;
+		using internal_char_type = storage_type;
+		using internal_string_type = std::basic_string<internal_char_type>;
 
 		OCT_CPP20_CONSTEXPR
 		uni_string() = default;
@@ -188,7 +189,7 @@ namespace oct {
 		friend std::basic_istream<CharTy, Traits>& operator>>(std::basic_istream<CharTy, Traits>& is, uni_string<RefEnc>& str);
 
 	private:
-		std::basic_string<internal_type> data_str;
+		internal_string_type data_str;
 	};
 
 
@@ -318,6 +319,34 @@ namespace oct {
 		template<typename CharTy, size_t StrSize>
 		constexpr inline size_t trimmed_size(const CharTy(&str_arr)[StrSize]);
 	}
+
+
+	namespace impl {
+		#ifdef OCT_CPP20
+		using std_encodings_tuple = std::tuple<ASCII<>, Wide<>, UTF16<>, UTF32<>, UTF8<>>;
+		#else
+		using std_encodings_tuple = std::tuple<ASCII<>, Wide<>, UTF16<>, UTF32<>>;
+		#endif
+
+		template<typename Enc, typename = void>
+		struct uni_string_hash {
+			std::size_t operator()(const oct::uni_string<Enc>& s) const noexcept;
+		};
+
+		template<typename Enc>
+		struct uni_string_hash<Enc, typename std::enable_if<oct::tuple_contains<Enc, oct::impl::std_encodings_tuple>::value, bool>::type> {
+			std::size_t operator()(const oct::uni_string<Enc>& s) const noexcept;
+		};
+	}
 }
+
+
+template<typename Enc>
+struct std::hash<oct::uni_string<Enc>> {
+	std::size_t operator()(const oct::uni_string<Enc>& s) const noexcept;
+};
+
+
+
 
 #include "../src/uni_string.inl"

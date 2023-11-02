@@ -5,7 +5,7 @@
 namespace oct {
     template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
     impl::enable_if_same_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
-        return src_str;
+        return std::basic_string<ToEnc::storage_type>(src_str); //NEEDS TO BE FIXED
     }
 
     template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR

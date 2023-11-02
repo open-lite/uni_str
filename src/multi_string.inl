@@ -388,4 +388,15 @@ namespace oct {
 }
 
 
+
+template<typename... Encs>
+std::size_t std::hash<oct::multi_uni_string<Encs...>>::operator()(const oct::multi_uni_string<Encs...>& s) const noexcept {
+	std::size_t ret = 0, i = 0;
+	(void)std::initializer_list<int> {
+		((void)(ret ^= (std::hash<oct::uni_string<Encs>>{}(s.to_uni_str<Encs>()) << i++)), 0)...
+	};
+	return std::size_t();
+}
+
+
 #undef ASSERT_VALID_ENC

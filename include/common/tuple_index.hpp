@@ -35,6 +35,9 @@ namespace oct {
 
 			struct valid : std::integral_constant<bool, (count == 1)> {};
 
+			constexpr static size_t type_count = count;
+
+
 			static_assert(count != 0 || !VerifyCount, "Tuple does not contain given type!");
 			static_assert(count <= 1 || !VerifyCount, "More than one occurance of the same type in tuple!");
 		};

@@ -5,6 +5,7 @@
 
 #include "file_versioning.hpp"
 #include "cpp_defs.h"
+#include "tuple_index.hpp"
 
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
 #include <string_view>
@@ -16,7 +17,7 @@
 
 // This file is versioned because common types can be added/removed in the future
 #define OCT_TYPE_DEFS_MAJOR_US 1
-#define OCT_TYPE_DEFS_MINOR_US 1
+#define OCT_TYPE_DEFS_MINOR_US 2
 
 
 #if  OCT_TYPE_DEFS_MAJOR  < OCT_TYPE_DEFS_MAJOR_US || \
@@ -110,6 +111,12 @@ namespace oct {
 	template <typename T, typename EnableTy = bool>
 	using enable_if_tuple_like = typename std::enable_if<is_tuple_like<T>::value, EnableTy>::type;
 
+
+	template<typename T, typename TupleTy>
+	struct tuple_contains : std::false_type {};
+
+	template<typename T, typename... TupleTs>
+	struct tuple_contains<T, std::tuple<TupleTs...>> : std::integral_constant<bool, (impl::tuple_index<std::tuple<TupleTs...>, T, false>::type_count != 0)> {};
 
 
 	template<typename CharTy, typename EnableTy = bool>

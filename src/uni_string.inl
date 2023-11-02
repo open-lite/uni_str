@@ -535,3 +535,31 @@ namespace oct {
 		}
 	}
 }
+
+
+namespace oct {
+	namespace impl {
+		template<typename Enc, typename Enable>
+		std::size_t
+		uni_string_hash<Enc, Enable>::
+		operator()(const oct::uni_string<Enc>& s) const noexcept {
+			std::size_t ret = 0, i = 0;
+			for (oct::byte_t b : s.bytes())
+				ret ^= (static_cast<std::uint8_t>(b) << i++);
+			return ret;
+		}
+
+		template<typename Enc>
+		std::size_t 
+		uni_string_hash<Enc, typename std::enable_if<oct::tuple_contains<Enc, oct::impl::std_encodings_tuple>::value, bool>::type>::
+		operator()(const oct::uni_string<Enc>& s) const noexcept {
+			return std::hash<typename oct::uni_string<Enc>::internal_string_type>{}(s.to_str<Enc>());
+		}
+	}
+}
+
+
+template<typename Enc>
+std::size_t std::hash<oct::uni_string<Enc>>::operator()(const oct::uni_string<Enc>& s) const noexcept {
+	return oct::impl::uni_string_hash<Enc>{}(s);
+}
