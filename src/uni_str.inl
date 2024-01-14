@@ -12,7 +12,7 @@ namespace oct {
 	template<typename StrEnc>
 	template<typename SrcEncoding> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>::uni_string(oct::uni_string<SrcEncoding> src)
-		: data_str(src.to_str<StrEnc>()) {}
+		: data_str(src.template to_str<StrEnc>()) {}
 
 	template<typename StrEnc>
 	template<typename CharTy> OCT_CPP20_CONSTEXPR
@@ -64,7 +64,7 @@ namespace oct {
 	template<typename StrEnc>
 	template<typename SrcEncoding> OCT_CPP20_CONSTEXPR
 	uni_string<StrEnc>& uni_string<StrEnc>::operator=(uni_string<SrcEncoding> uni_str){
-		data_str = uni_str.to_str<StrEnc>();
+		data_str = uni_str.template to_str<StrEnc>();
 		return *this;
 	}
 
@@ -553,7 +553,7 @@ namespace oct {
 		std::size_t 
 		uni_string_hash<Enc, typename std::enable_if<oct::tuple_contains<Enc, oct::impl::std_encodings_tuple>::value, bool>::type>::
 		operator()(const oct::uni_string<Enc>& s) const noexcept {
-			return std::hash<typename oct::uni_string<Enc>::internal_string_type>{}(s.to_str<Enc>());
+			return std::hash<typename oct::uni_string<Enc>::internal_string_type>{}(s.template to_str<Enc>());
 		}
 	}
 }
