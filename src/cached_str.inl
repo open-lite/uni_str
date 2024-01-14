@@ -1,4 +1,4 @@
-#include "uni_str/multi_string.hpp"
+#include "uni_str/cached_str.hpp"
 
 #include "uni_str/common/apply.hpp"
 

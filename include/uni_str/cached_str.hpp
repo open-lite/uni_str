@@ -5,7 +5,7 @@
 #include "common/cpp_defs.h"
 #include "common/get.hpp"
 #include "encoding.hpp"
-#include "uni_string.hpp"
+#include "uni_str.hpp"
 
 #include <functional>
 
@@ -239,4 +239,4 @@ struct std::hash<oct::multi_uni_string<Encs...>>{
 	std::size_t operator()(const oct::multi_uni_string<Encs...>& s) const noexcept;
 };
 
-#include "../../src/multi_string.inl"
+#include "../../src/cached_str.inl"
