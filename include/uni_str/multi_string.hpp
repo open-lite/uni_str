@@ -239,4 +239,4 @@ struct std::hash<oct::multi_uni_string<Encs...>>{
 	std::size_t operator()(const oct::multi_uni_string<Encs...>& s) const noexcept;
 };
 
-#include "../src/multi_string.inl"
+#include "../../src/multi_string.inl"

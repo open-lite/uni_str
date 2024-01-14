@@ -1,11 +1,11 @@
-#include "../include/uni_string.hpp"
+#include "uni_str/uni_string.hpp"
 
 #include <iterator>
 #include <array>
 #include <sstream>
 #include <iomanip>
 
-#include "common/split_into_bytes.hpp"
+#include "uni_str/common/split_into_bytes.hpp"
 
 
 namespace oct {

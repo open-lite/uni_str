@@ -1,6 +1,6 @@
-#include "../include/multi_string.hpp"
+#include "uni_str/multi_string.hpp"
 
-#include "common/apply.hpp"
+#include "uni_str/common/apply.hpp"
 
 #include <functional>
 
