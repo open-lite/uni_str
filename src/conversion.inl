@@ -2,26 +2,26 @@
 #include <type_traits>
 
 
-namespace oct {
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+namespace ol {
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_same_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return std::basic_string<typename ToEnc::storage_type>(src_str); //NEEDS TO BE FIXED
     }
 
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_same_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         return std::basic_string<typename ToEnc::storage_type>(src_str, src_size);
     }
 }
 
 
-namespace oct {
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+namespace ol {
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_same_size_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return std::basic_string<typename ToEnc::storage_type>(src_str.begin(), src_str.cend());
     }
 
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_same_size_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         return std::basic_string<typename ToEnc::storage_type>(
             reinterpret_cast<const typename ToEnc::storage_type*>(src_str), src_size
@@ -30,13 +30,13 @@ namespace oct {
 }
 
 
-namespace oct {
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+namespace ol {
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_from_utf8_sized_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_from_utf8_sized_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         std::basic_string<typename ToEnc::storage_type> ret;
         ret.reserve(impl::capacity_for<FromEnc>(src_str, src_size));
@@ -107,13 +107,13 @@ namespace oct {
 }
     
 
-namespace oct {
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+namespace ol {
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_to_utf8_sized_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_to_utf8_sized_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         //using ToStorageTy = typename ToEnc::storage_type;
         std::basic_string<typename ToEnc::storage_type> ret = std::basic_string<typename ToEnc::storage_type>();
@@ -167,19 +167,19 @@ namespace oct {
 }
 
 
-namespace oct {
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+namespace ol {
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_utf_16_to_32_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_utf_16_to_32_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         std::basic_string<typename ToEnc::storage_type> ret;
         ret.reserve(impl::capacity_for<FromEnc>(src_str, src_size));
 
         size_t i = 0;
-        oct::unicode_cp_t ch;
+        ol::unicode_cp_t ch;
         uint32_t trail = 0;
 
         while (src_size != nsize ? i < src_size : src_str[i]) {
@@ -204,13 +204,13 @@ namespace oct {
 }
 
 
-namespace oct{
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+namespace ol{
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_utf_32_to_16_t<FromEnc, ToEnc> convert(str_arg<typename FromEnc::storage_type> src_str) {
         return convert<FromEnc, ToEnc>(src_str.c_str(), src_str.size());
     }
 
-    template<typename FromEnc, typename ToEnc> OCT_CPP20_CONSTEXPR
+    template<typename FromEnc, typename ToEnc> OL_CPP20_CONSTEXPR
     impl::enable_if_utf_32_to_16_t<FromEnc, ToEnc> convert(const typename FromEnc::storage_type* src_str, size_t src_size) {
         std::basic_string<typename ToEnc::storage_type> ret;
         ret.reserve(impl::capacity_for<FromEnc>(src_str, src_size));
@@ -240,42 +240,42 @@ namespace oct{
 
 
 //Helper function definitions
-namespace oct {
+namespace ol {
     namespace impl {
-        constexpr oct::UTF16<>::char_type lead_surrogate(oct::unicode_cp_t code_point) noexcept {
-            return static_cast<oct::UTF16<>::char_type>(utf16_trail_surrogate_offset + (code_point >> 10));
+        constexpr ol::UTF16<>::char_type lead_surrogate(ol::unicode_cp_t code_point) noexcept {
+            return static_cast<ol::UTF16<>::char_type>(utf16_trail_surrogate_offset + (code_point >> 10));
         }
 
-        constexpr oct::UTF16<>::char_type trail_surrogate(oct::unicode_cp_t code_point) noexcept {
-            return static_cast<oct::UTF16<>::char_type>(0xDC00 + (code_point & 0x3FF));
+        constexpr ol::UTF16<>::char_type trail_surrogate(ol::unicode_cp_t code_point) noexcept {
+            return static_cast<ol::UTF16<>::char_type>(0xDC00 + (code_point & 0x3FF));
         }
     }
 }
 
 
-namespace oct{
+namespace ol{
     namespace impl {
         //If the source is UTF16, get the supplementary code point. Otherwise, return the same code point.
         template<typename Enc>
         template<typename... UTF16Args>
-        constexpr oct::unicode_cp_t oct::impl::utf<Enc>::supplementary_code_point(oct::unicode_cp_t code_point, UTF16Args...) {
+        constexpr ol::unicode_cp_t ol::impl::utf<Enc>::supplementary_code_point(ol::unicode_cp_t code_point, UTF16Args...) {
             return code_point;
         }
 
         template<typename StorageTy>
-        constexpr oct::unicode_cp_t oct::impl::utf<oct::UTF16<StorageTy>>::supplementary_code_point(oct::unicode_cp_t code_point, uint32_t trail) {
+        constexpr ol::unicode_cp_t ol::impl::utf<ol::UTF16<StorageTy>>::supplementary_code_point(ol::unicode_cp_t code_point, uint32_t trail) {
             return (code_point << 10) + trail - utf16_surrogate_offset;
         }
 
 
         // If the destination string is UTF16, return trail and lead surrogate. Otherwise, return just the code point.
         template<typename Enc> constexpr
-        surrogate_arr_t<Enc> oct::impl::utf<Enc>::surrogates(oct::unicode_cp_t code_point) {
+        surrogate_arr_t<Enc> ol::impl::utf<Enc>::surrogates(ol::unicode_cp_t code_point) {
             return { static_cast<typename Enc::storage_type>(code_point) };
         }
 
         template<typename StorageTy> constexpr
-        surrogate_arr_t<oct::UTF16<StorageTy>> oct::impl::utf<oct::UTF16<StorageTy>>::surrogates(oct::unicode_cp_t code_point) {
+        surrogate_arr_t<ol::UTF16<StorageTy>> ol::impl::utf<ol::UTF16<StorageTy>>::surrogates(ol::unicode_cp_t code_point) {
             return { lead_surrogate(code_point), trail_surrogate(code_point) };
         }
 
@@ -283,12 +283,12 @@ namespace oct{
         //If the source is UTF16, check the surrogates as well. Otherwise, just check the code point.
         template<typename Enc>
         template<typename... UTF16Args>
-        constexpr bool oct::impl::utf<Enc>::is_supplementary_plane(oct::unicode_cp_t cp, UTF16Args...) {
+        constexpr bool ol::impl::utf<Enc>::is_supplementary_plane(ol::unicode_cp_t cp, UTF16Args...) {
             return 0x10000 <= cp && cp <= 0x10FFFF;
         }
         
         template<typename StorageTy>
-        constexpr bool oct::impl::utf<oct::UTF16<StorageTy>>::is_supplementary_plane(oct::unicode_cp_t cp, uint32_t& trail, const StorageTy* src_str, size_t& i, size_t src_size) {
+        constexpr bool ol::impl::utf<ol::UTF16<StorageTy>>::is_supplementary_plane(ol::unicode_cp_t cp, uint32_t& trail, const StorageTy* src_str, size_t& i, size_t src_size) {
             return (cp & 0x400) == 0 && i < src_size && ((trail = src_str[i++]) || src_size != nsize) && 0xDC00 <= trail && trail <= 0xDFFF;
         }
     }
@@ -296,7 +296,7 @@ namespace oct{
 
 
 
-namespace oct {
+namespace ol {
     namespace impl {
 
         template<typename CharTy> UNI_STR_STRLEN_CONSTEXPR
@@ -305,14 +305,14 @@ namespace oct {
             return std::char_traits<CharTy>::length(str);
 
         #else
-            OCT_PUSH_WARN_PRE_CPP14
+            OL_PUSH_WARN_PRE_CPP14
 
             if (!str) return nsize;
             const CharTy* end = str;
             for (; *end; ++end);
             return (end - str);
 
-            OCT_POP_WARN
+            OL_POP_WARN
         #endif
         }
         

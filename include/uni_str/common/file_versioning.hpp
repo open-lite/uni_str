@@ -1,22 +1,22 @@
 #pragma once
 
 // These macros are used in the below template
-#define OCT_STR(x) #x
+#define OL_STR(x) #x
 
 
-#define OCT_OUTDATED_WARN(header_name, old_major, old_minor, new_major, new_minor, ...) \
-"You are using an outdated verison (" OCT_STR(old_major) "." OCT_STR(old_minor) ") "    \
-"of the common OCT " OCT_STR(header_name) " header! "                                   \
+#define OL_OUTDATED_WARN(header_name, old_major, old_minor, new_major, new_minor, ...) \
+"You are using an outdated verison (" OL_STR(old_major) "." OL_STR(old_minor) ") "    \
+"of the common OL " OL_STR(header_name) " header! "                                   \
 __VA_ARGS__																			    \
 																					    \
-"You have version " OCT_STR(new_major) "." OCT_STR(new_minor) " available. "            \
+"You have version " OL_STR(new_major) "." OL_STR(new_minor) " available. "            \
 																					    \
-"Update your other OCT libaries OR "													\
-"set " #old_major "=" OCT_STR(new_major) " and " #old_minor "=" OCT_STR(new_minor) " "  \
-"in your project to use version " OCT_STR(new_major) "." OCT_STR(new_minor)
+"Update your other OL libaries OR "													\
+"set " #old_major "=" OL_STR(new_major) " and " #old_minor "=" OL_STR(new_minor) " "  \
+"in your project to use version " OL_STR(new_major) "." OL_STR(new_minor)
 
 
-#define OCT_VERSION_STR(major, minor) OCT_STR(major) "." OCT_STR(minor)
+#define OL_VERSION_STR(major, minor) OL_STR(major) "." OL_STR(minor)
 
 
 
@@ -36,35 +36,35 @@ __VA_ARGS__																			    \
 
 
 // <EXPLANATION>
-#define OCT_<HEADER>_MAJOR_<LIBRARY> <VERSION_MAJOR>
-#define OCT_<HEADER>_MINOR_<LIBRARY> <VERSION_MINOR>
+#define OL_<HEADER>_MAJOR_<LIBRARY> <VERSION_MAJOR>
+#define OL_<HEADER>_MINOR_<LIBRARY> <VERSION_MINOR>
 
 
-#if  OCT_<HEADER>_MAJOR  < OCT_<HEADER>_MAJOR_<LIBRARY> || \
-	(OCT_<HEADER>_MAJOR == OCT_<HEADER>_MAJOR_<LIBRARY> && OCT_<HEADER>_MINOR <= OCT_<HEADER>_MINOR_<LIBRARY>)
-#define OCT_<HEADER>_<LIBRARY>_IS_NEWER true
+#if  OL_<HEADER>_MAJOR  < OL_<HEADER>_MAJOR_<LIBRARY> || \
+	(OL_<HEADER>_MAJOR == OL_<HEADER>_MAJOR_<LIBRARY> && OL_<HEADER>_MINOR <= OL_<HEADER>_MINOR_<LIBRARY>)
+#define OL_<HEADER>_<LIBRARY>_IS_NEWER true
 #endif
 
 
 
-#if  !defined(OCT_<HEADER>_MAJOR) || \
-	(!defined(OCT_<HEADER>_DECLARED) && defined(OCT_<HEADER>_<LIBRARY>_IS_NEWER))
+#if  !defined(OL_<HEADER>_MAJOR) || \
+	(!defined(OL_<HEADER>_DECLARED) && defined(OL_<HEADER>_<LIBRARY>_IS_NEWER))
 
 
 <CODE>
 
 
 
-#undef OCT_<HEADER>
-#undef OCT_<HEADER>_MAJOR
-#undef OCT_<HEADER>_MINOR
+#undef OL_<HEADER>
+#undef OL_<HEADER>_MAJOR
+#undef OL_<HEADER>_MINOR
 
-#define OCT_<HEADER>          OCT_VERSION_STR(OCT_<HEADER>_MAJOR_<LIBRARY>, OCT_<HEADER>_MINOR_<LIBRARY>)
-#define OCT_<HEADER>_MAJOR    OCT_<HEADER>_MAJOR_<LIBRARY>
-#define OCT_<HEADER>_MINOR	  OCT_<HEADER>_MINOR_<LIBRARY>
-#define OCT_<HEADER>_DECLARED true
+#define OL_<HEADER>          OL_VERSION_STR(OL_<HEADER>_MAJOR_<LIBRARY>, OL_<HEADER>_MINOR_<LIBRARY>)
+#define OL_<HEADER>_MAJOR    OL_<HEADER>_MAJOR_<LIBRARY>
+#define OL_<HEADER>_MINOR	  OL_<HEADER>_MINOR_<LIBRARY>
+#define OL_<HEADER>_DECLARED true
 
-#elif defined(OCT_<HEADER>_<LIBRARY>_IS_NEWER)
-#pragma message(OCT_OUTDATED_WARN(endian, OCT_<HEADER>_MAJOR, OCT_<HEADER>_MINOR, OCT_<HEADER>_MAJOR_<LIBRARY>, OCT_<HEADER>_MINOR_<LIBRARY>, "<OPTIONAL_CONSEQUENCE_EXPLANATION>"))
+#elif defined(OL_<HEADER>_<LIBRARY>_IS_NEWER)
+#pragma message(OL_OUTDATED_WARN(endian, OL_<HEADER>_MAJOR, OL_<HEADER>_MINOR, OL_<HEADER>_MAJOR_<LIBRARY>, OL_<HEADER>_MINOR_<LIBRARY>, "<OPTIONAL_CONSEQUENCE_EXPLANATION>"))
 #endif
 **********************************************/

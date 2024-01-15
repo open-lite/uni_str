@@ -3,7 +3,7 @@
 
 #include "common/type_defs.hpp"
 
-namespace oct {
+namespace ol {
 	template<typename CharTy, typename StoreAs = CharTy>
 	struct Encoding {
 		using char_type = CharTy;

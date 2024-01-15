@@ -1,12 +1,12 @@
 #pragma once
-#ifndef OCT_GET
-#define OCT_GET
+#ifndef OL_GET
+#define OL_GET
 
 #include <tuple>
 
 #include "tuple_index.hpp"
 
-namespace oct {
+namespace ol {
 #if !defined(__cpp_lib_tuples_by_type) || __cpp_lib_tuples_by_type < 201304L
 
 	template<class T, class Tuple, enable_if_tuple_like<Tuple> = true>

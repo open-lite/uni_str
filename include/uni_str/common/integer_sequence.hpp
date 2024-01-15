@@ -1,21 +1,21 @@
 #pragma once
-#ifndef OCT_INT_SEQ
-#define OCT_INT_SEQ
+#ifndef OL_INT_SEQ
+#define OL_INT_SEQ
 
 #include <cstdint>
 
 #if defined(__cpp_lib_integer_sequence) && __cpp_lib_integer_sequence >= 201304L
-#define OCT_HAS_STD_INT_SEQ true
+#define OL_HAS_STD_INT_SEQ true
 #endif
 
 
 // Prefer std's implementation of integer_sequence 
 // for compatibility with functions that specifically expect it from std::
-#if defined(OCT_HAS_STD_INT_SEQ)
+#if defined(OL_HAS_STD_INT_SEQ)
 
 #include <utility>
 
-namespace oct {
+namespace ol {
     using std::integer_sequence;
 
     using std::index_sequence;
@@ -23,7 +23,7 @@ namespace oct {
 
 #else
 
-namespace oct {
+namespace ol {
     template <typename T, T... Is>
     struct integer_sequence {
         static_assert(std::is_integral<T>::value, "integer_sequence<T, I...> requires T to be an integral type.");
@@ -40,7 +40,7 @@ namespace oct {
 #endif 
 
 //common O(log n) integer sequence implementation, but with reversing added
-namespace oct { 
+namespace ol { 
     namespace impl {
         template <typename T, class Lhs, class Rhs, bool Reversed>
         struct merge_int_seqs;
@@ -77,16 +77,16 @@ namespace oct {
 }
 
 
-#if defined(OCT_HAS_STD_INT_SEQ) 
+#if defined(OL_HAS_STD_INT_SEQ) 
 //use std's make_integer_sequence when not reversed if it's available
-namespace oct {
+namespace ol {
     template <typename T, T N>
     struct make_integer_sequence<T, N, false> : std::make_integer_sequence<T, N> {};
 }
 #endif
 
 
-namespace oct {
+namespace ol {
     template<size_t N, bool Reversed = false>
     using make_index_sequence = make_integer_sequence<size_t, N, Reversed>;
 

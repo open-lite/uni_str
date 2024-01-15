@@ -1,6 +1,6 @@
 #pragma once
-#ifndef OCT_TUPLE_INDEX
-#define OCT_TUPLE_INDEX
+#ifndef OL_TUPLE_INDEX
+#define OL_TUPLE_INDEX
 
 #include <tuple>
 #include <type_traits>
@@ -9,7 +9,7 @@
 #include "cpp_defs.h"
 
 
-namespace oct {
+namespace ol {
 	namespace impl {
 		template<typename Tuple, typename T, bool VerifyCount = true, size_t = 0, size_t = 0 >
 		struct tuple_index {
