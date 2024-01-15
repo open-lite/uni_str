@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <type_traits>
+#include <cstdint>
+#include <limits>
 
 #include "file_versioning.hpp"
 #include "cpp_defs.h"
