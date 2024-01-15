@@ -12,7 +12,7 @@ namespace ol {
 	template<typename... Encs>
 	template<typename SrcEnc> OL_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>::multi_uni_string(uni_string<SrcEnc> uni_str)
-		: strings(std::make_tuple(uni_str.to_uni_str<Encs>()...)) {}
+		: strings(std::make_tuple(uni_str.template to_uni_str<Encs>()...)) {}
 
 	template<typename... Encs>
 	template<typename CharTy> OL_CPP20_CONSTEXPR
@@ -57,7 +57,7 @@ namespace ol {
 	template<typename... Encs>
 	template<typename SrcEnc> OL_CPP20_CONSTEXPR
 	multi_uni_string<Encs...>& multi_uni_string<Encs...>::operator=(uni_string<SrcEnc> uni_str) {
-		strings = std::make_tuple(uni_str.to_uni_str<Encs>()...);
+		strings = std::make_tuple(uni_str.template to_uni_str<Encs>()...);
 		return *this;
 	}
 
@@ -393,7 +393,7 @@ template<typename... Encs>
 std::size_t std::hash<ol::multi_uni_string<Encs...>>::operator()(const ol::multi_uni_string<Encs...>& s) const noexcept {
 	std::size_t ret = 0, i = 0;
 	(void)std::initializer_list<int> {
-		((void)(ret ^= (std::hash<ol::uni_string<Encs>>{}(s.to_uni_str<Encs>()) << i++)), 0)...
+		((void)(ret ^= (std::hash<ol::uni_string<Encs>>{}(s.template to_uni_str<Encs>()) << i++)), 0)...
 	};
 	return std::size_t();
 }
