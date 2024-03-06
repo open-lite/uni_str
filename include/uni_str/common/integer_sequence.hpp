@@ -3,6 +3,7 @@
 #define OL_INT_SEQ
 
 #include <cstdint>
+#include <type_traits>
 
 #if defined(__cpp_lib_integer_sequence) && __cpp_lib_integer_sequence >= 201304L
 #define OL_HAS_STD_INT_SEQ true
@@ -33,8 +34,8 @@ namespace ol {
     };
 
 
-    template<size_t... Is>
-    using index_sequence = integer_sequence<size_t, Is...>;
+    template<std::size_t... Is>
+    using index_sequence = integer_sequence<std::size_t, Is...>;
 }
 
 #endif 
@@ -47,12 +48,12 @@ namespace ol {
 
 
         template <typename T, T... LIs, T... RIs>
-        struct impl::merge_int_seqs<T, integer_sequence<T, LIs...>, integer_sequence<T, RIs...>, false> {
+        struct merge_int_seqs<T, integer_sequence<T, LIs...>, integer_sequence<T, RIs...>, false> {
             using seq_type = integer_sequence<T, LIs..., sizeof...(LIs) + RIs...>;
         };
 
         template <typename T, T... LIs, T... RIs>
-        struct impl::merge_int_seqs<T, integer_sequence<T, LIs...>, integer_sequence<T, RIs...>, true> {
+        struct merge_int_seqs<T, integer_sequence<T, LIs...>, integer_sequence<T, RIs...>, true> {
             using seq_type = integer_sequence<T, sizeof...(LIs) + RIs..., LIs...>;
         };
 
@@ -61,7 +62,7 @@ namespace ol {
         struct make_integer_sequence;
 
         template <typename T, T N, bool Reversed>
-        struct make_integer_sequence<T, std::integral_constant<T, N>, Reversed> : impl::merge_int_seqs<T,
+        struct make_integer_sequence<T, std::integral_constant<T, N>, Reversed> : merge_int_seqs<T,
             typename make_integer_sequence<T, std::integral_constant<T, N / 2    >, Reversed>::seq_type,
             typename make_integer_sequence<T, std::integral_constant<T, N - N / 2>, Reversed>::seq_type,
         Reversed> {}; 
@@ -87,8 +88,8 @@ namespace ol {
 
 
 namespace ol {
-    template<size_t N, bool Reversed = false>
-    using make_index_sequence = make_integer_sequence<size_t, N, Reversed>;
+    template<std::size_t N, bool Reversed = false>
+    using make_index_sequence = make_integer_sequence<std::size_t, N, Reversed>;
 
 
     template<class... T>
